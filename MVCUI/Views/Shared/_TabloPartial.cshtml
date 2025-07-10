@@ -1,0 +1,130 @@
+﻿@model EntityLayer.DTO.NotlarViewModel
+
+@if (Model?.Notlar != null && Model.Notlar.Any())
+{
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Ad</th>
+                <th>Soyad</th>
+                <th>Numara</th>
+                <th>Ders</th>
+                <th>Vize</th>
+                <th>Final</th>
+                <th>Ortalama</th>
+                <th>Durum</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Notlar)
+            {
+                <tr data-notid="@item.NotId" data-ogrid="@item.OgrId"
+                    data-ad="@item.Ad"
+                    data-soyad="@item.Soyad"
+                    data-okulno="@item.OkulNo"
+                    data-dersad="@item.DersAd"
+                    data-sinav1="@item.Sinav1"
+                    data-sinav2="@item.Sinav2"
+                    onclick="selectRow(this)">
+                    <td>@item.Ad</td>
+                    <td>@item.Soyad</td>
+                    <td>@item.OkulNo</td>
+                    <td>@item.DersAd</td>
+                    <td>@item.Sinav1</td>
+                    <td>@item.Sinav2</td>
+                    <td>@item.Ortalama</td>
+                    <td>@(item.Durum ? "Geçti" : "Kaldı")</td>
+
+                    
+
+                </tr>
+            }
+            
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-warning">Henüz not eklenmedi.</div>
+}
+
+<style>
+    tr.selected {
+        background-color: #083968 !important; 
+        color: white !important;
+    }
+
+    tr:hover{
+        cursor:pointer;
+    }
+
+</style>
+
+ <script>
+     let selectedRow = null;
+
+     function selectRow(rowElement) {
+
+         if (selectedRow) {
+             selectedRow.classList.remove('selected');
+             console.log("önceki seçili satırların stili kaldırıldı");
+         }
+         rowElement.classList.add('selected');
+         selectedRow = rowElement; // selectedRow'u yeni seçilen satır olarak güncelle
+         console.log('Yeni satır seçildi ve stile eklendi.');
+
+        
+
+        // Satırdan verileri al
+        const ad = rowElement.dataset.ad;
+        const soyad = rowElement.dataset.soyad;
+        const okulNo = rowElement.dataset.okulno;
+        const dersAd = rowElement.dataset.dersad;
+        const sinav1 = rowElement.dataset.sinav1;
+        const sinav2 = rowElement.dataset.sinav2;
+        const notId = rowElement.dataset.notid;
+        const ogrId = rowElement.dataset.ogrid;
+
+        // Form alanlarını doldur
+        document.querySelector("input[name='Ad']").value = ad;
+        document.querySelector("input[name='Soyad']").value = soyad;
+        document.querySelector("input[name='OkulNo']").value = okulNo;
+        document.querySelector("input[name='Sinav1']").value = sinav1;
+        document.querySelector("input[name='Sinav2']").value = sinav2;
+
+        // Dropdown seçimini eşle
+        const selectDers = document.querySelector("select[name='DersId']");
+        if (selectDers) {
+            for (let i = 0; i < selectDers.options.length; i++) {
+                if (selectDers.options[i].text === dersAd) {
+                    selectDers.value = selectDers.options[i].value;
+                    break;
+                }
+            }
+        }
+
+        const globalSelectedNotIdInput = document.getElementById('SelectedNotId');
+        const globalSelectedOgrIdInput = document.getElementById('SelectedOgrId');
+        const globalSelectedNotIdForDeleteInput = document.getElementById('SelectedNotIdForDelete'); // Silme butonu için yeni ID
+        const globalSelectedOgrIdForDeleteInput = document.getElementById('SelectedOgrIdForDelete'); // Silme butonu için yeni ID
+        
+        if (globalSelectedNotIdInput && globalSelectedOgrIdInput) {
+            globalSelectedNotIdInput.value = notId;
+            globalSelectedOgrIdInput.value = ogrId;
+            console.log('Güncelleme için gizli alanlar güncellendi. NotId:', globalSelectedNotIdInput.value, 'OgrId:', globalSelectedOgrIdInput.value);
+        } else {
+            console.error('Hata: _EkleSilGuncellePartial içindeki "Güncelleme" formunun gizli inputları bulunamadı (SelectedNotId, SelectedOgrId).');
+        }
+
+        if (globalSelectedNotIdForDeleteInput && globalSelectedOgrIdForDeleteInput) {
+            globalSelectedNotIdForDeleteInput.value = notId;
+            globalSelectedOgrIdForDeleteInput.value = ogrId;
+            console.log('Silme için gizli alanlar güncellendi. NotId:', globalSelectedNotIdForDeleteInput.value, 'OgrId:', globalSelectedOgrIdForDeleteInput.value);
+        } else {
+            console.error('Hata: _EkleSilGuncellePartial içindeki "Sil (Seçilen)" formunun gizli inputları bulunamadı (SelectedNotIdForDelete, SelectedOgrIdForDelete).');
+        }
+
+      
+     }
+ </script> 
+

@@ -1,0 +1,109 @@
+﻿@model EntityLayer.DTO.NotlarViewModel
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "_EkleSilGuncellePartial";
+}
+
+<h1>Alanlar</h1>
+
+@if (TempData["Mesaj"] != null)
+{
+    <div class="alert alert-warning">@TempData["Mesaj"]</div>
+}
+
+
+<form method="post"  asp-controller="Notlar" asp-action="NotEkle">
+
+    
+    @Html.AntiForgeryToken()
+    <div class="form-group py-2">
+        <label>Ad: </label>
+        <input asp-for="EkleModel.Ad" name="Ad" type="text" class="form-control" placeholder="Ad" />
+        <span  style="color:red" asp-validation-for="EkleModel.Ad"></span>
+    </div>
+    <div class="form-group py-2">
+        <label>Soyad: </label>
+        <input asp-for="EkleModel.Soyad" name="Soyad" type="text" class="form-control" placeholder="Soyad" />
+        <span style="color:red" asp-validation-for="EkleModel.Soyad"></span>
+    </div>
+    <div class="form-group py-2">
+        <label>Okul Numarası: </label>
+        <input asp-for="EkleModel.OkulNo" name="OkulNo" type="text" class="form-control" placeholder="Numara" />
+        <span style="color:red" asp-validation-for="EkleModel.OkulNo"></span>
+    </div>
+    <div class="form-group py-2">
+        <label>Ders: </label>
+        <select asp-for="EkleModel.DersId" name="DersId" class="form-control">
+            <option>Ders Seçiniz</option>
+            @foreach(var item in Model.Dersler)
+            {
+                <option value="@item.Value">@item.Text</option>
+            }
+        </select>
+        <span style="color:red" asp-validation-for="EkleModel.DersId"></span>
+    </div>
+    <div class="form-group py-2">
+        <label>Vize notu: </label>
+        <input asp-for="EkleModel.Sinav1" name="Sinav1" type="text" class="form-control" placeholder="Vize notu" />
+        <span style="color:red" asp-validation-for="EkleModel.Sinav1"></span>
+    </div>
+    <div class="form-group py-2">
+        <label>Final notu: </label>
+        <input asp-for="EkleModel.Sinav2" name="Sinav2" type="text" class="form-control" placeholder="Final notu" />
+        <span style="color:red" asp-validation-for="EkleModel.Sinav2"></span>
+    </div>
+    <input type="hidden" name="NotId" id="SelectedNotId" />
+    <input type="hidden" name="OgrId" id="SelectedOgrId" />
+    <button class="btn btn-success my-1 mx-1" type="submit" name="islem" value="kaydet">Kaydet</button>
+
+
+
+    
+
+    <button class="btn btn-primary my-1 mx-1" type="submit" name="islem" onclick="return validateUpdateSelection()" value="guncelle">Güncelle</button>
+
+    
+
+
+</form>
+
+<form method="post" asp-controller="Notlar" asp-action="NotKayitSil">
+    <input type="hidden" id="SelectedNotIdForDelete" name="NotId" />
+    <input type="hidden" id="SelectedOgrIdForDelete" name="OgrId" />
+    <button type="submit" class="btn btn-danger my-1 mx-1" onclick="return validateDeleteSelection()">Sil (Seçilen)</button>
+</form>
+<script>
+    
+
+    function validateUpdateSelection() {
+        const notIdInput = document.getElementById("SelectedNotId");
+        const ogrIdInput = document.getElementById("SelectedOgrId");
+
+        if (!notIdInput || !ogrIdInput || notIdInput.value === "" || ogrIdInput.value === "") {
+            alert("Lütfen güncellemek için bir satır seçin!");
+            return false; // Form gönderimini engelle
+        }
+        return true; // Form gönderimine izin ver
+    }
+
+    function validateDeleteSelection() {
+        const notIdInput = document.getElementById("SelectedNotIdForDelete");
+        const ogrIdInput = document.getElementById("SelectedOgrIdForDelete");
+
+        if (!notIdInput || !ogrIdInput || notIdInput.value === "" || ogrIdInput.value === "") {
+            alert("Lütfen silmek için bir satır seçin!");
+            return false; // Form gönderimini engelle
+        }
+        return true; // Form gönderimine izin ver
+    }
+
+
+
+    
+</script>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

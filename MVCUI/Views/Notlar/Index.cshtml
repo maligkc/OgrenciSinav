@@ -1,0 +1,16 @@
+﻿@model EntityLayer.DTO.NotlarViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="row" >
+    <div class="col-7" >@Html.Partial("_TabloPartial",Model)</div>
+
+    <div class="col-5">@Html.Partial("_EkleSilGuncellePartial")</div>
+    @if (TempData["Mesaj"] != null)
+    {
+        <div class="alert alert-warning">@TempData["Mesaj"]</div>
+    }
+</div>
+
